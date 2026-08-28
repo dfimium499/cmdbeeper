@@ -1,0 +1,165 @@
+.\" cmdbeeper.1 — man page for cmdbeeper
+.\" Copyright (C) 2026  Diego Fernández
+.\"
+.\" This program is free software: you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation, either version 3 of the License, or
+.\" (at your option) any later version.
+.\"
+.\" This program is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with this program.  If not, see <https://www.gnu.org/licenses/>.
+.TH CMDBEEPER 1 "August 2026" "cmdbeeper 1.0.0" "User Commands"
+.SH NAME
+cmdbeeper \- beep repeatedly until Enter is pressed or a timer elapses
+.SH SYNOPSIS
+.B cmdbeeper
+.RB [ \-s
+.IR sound_file ]
+.RB [ \-i
+.IR interval ]
+.RB [ \-t
+.IR timeout ]
+.RB [ \-e ]
+.RB [ \-v | \-q ]
+.br
+.B cmdbeeper
+.B \-h
+.br
+.B cmdbeeper
+.B \-\-version
+.SH DESCRIPTION
+.B cmdbeeper
+plays a sound repeatedly, once per interval, until the user presses
+Enter or an optional timeout is reached. It is intended to be chained
+after a long-running command as an audible completion notification:
+.PP
+.RS
+$ ./slow_build.sh; cmdbeeper
+.RE
+.PP
+Playback and cleanup are signal-safe: pressing Ctrl-C, or sending
+.B SIGINT
+or
+.B SIGTERM
+to the process, stops the current sound immediately and exits cleanly
+rather than waiting for the clip in progress to finish.
+.SH OPTIONS
+.TP
+.BI \-s " sound_file"
+Path to the audio file to play, passed to
+.BR paplay (1).
+Defaults to
+.I /usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga
+or the value of
+.BR CMDBEEPER_TUNE ,
+if set.
+.TP
+.BI \-i " interval"
+Seconds to wait between repetitions. Must be a non-negative integer.
+Defaults to
+.B 0
+(no gap between repetitions) or the value of
+.BR CMDBEEPER_INTERVAL ,
+if set.
+.TP
+.BI \-t " timeout"
+Stop automatically after
+.I timeout
+seconds even if Enter is never pressed. Must be a non-negative
+integer. Overrides
+.BR CMDBEEPER_TIMER ,
+if set. Incompatible with
+.BR \-e .
+.TP
+.B \-e
+Run with no timeout, ignoring any timeout inherited from
+.BR CMDBEEPER_TIMER .
+Incompatible with
+.BR \-t .
+.TP
+.B \-v
+Show the "Press Enter to stop..." prompt even if
+.B CMDBEEPER_QUIET
+is set in the environment. Incompatible with
+.BR \-q .
+.TP
+.B \-q
+Suppress the "Press Enter to stop..." prompt. Incompatible with
+.BR \-v .
+.TP
+.B \-h
+Show a brief usage message and exit.
+.TP
+.B \-\-version
+Show version and license information and exit. Must be given as the
+only argument.
+.SH ENVIRONMENT
+.TP
+.B CMDBEEPER_TUNE
+Overrides the default sound file. Equivalent to
+.BR \-s .
+.TP
+.B CMDBEEPER_INTERVAL
+Overrides the default interval, in seconds. Equivalent to
+.BR \-i .
+.TP
+.B CMDBEEPER_TIMER
+Sets a default timeout, in seconds. Equivalent to
+.BR \-t .
+Cleared by
+.BR \-e .
+.TP
+.B CMDBEEPER_QUIET
+If set to any value, suppresses the "Press Enter to stop..." prompt
+by default. Equivalent to
+.BR \-q .
+Cleared by
+.BR \-v .
+.SH EXIT STATUS
+.TP
+.B 0
+Stopped normally, either by Enter or by the timeout elapsing.
+.TP
+.B 1
+Invalid or conflicting command-line options, or an invalid
+.B CMDBEEPER_INTERVAL
+/
+.B CMDBEEPER_TIMER
+value.
+.PP
+If the sound backend fails (for example,
+.BR paplay (1)
+cannot find or read the sound file), cmdbeeper stops the beep loop and
+exits with
+.BR paplay 's
+own exit status, rather than looping indefinitely on a failing command.
+.SH EXAMPLES
+.TP
+Beep after a long build, using the default sound and interval:
+.B make; cmdbeeper
+.TP
+Run a makeshift alarm that goes off after 60 seconds:
+.B sleep 60; cmdbeeper
+.TP
+Beep every 2 seconds using a custom sound, for at most 60 seconds:
+.B cmdbeeper -s ~/sounds/ding.oga -i 2 -t 60
+.TP
+Run quietly (no on-screen prompt), overriding an inherited default:
+.B cmdbeeper -q
+.SH SEE ALSO
+.BR paplay (1)
+.SH AUTHOR
+Diego Fernández
+.SH COPYRIGHT
+Copyright \(co 2026 Diego Fernández.
+License GPLv3+: GNU GPL version 3 or later
+<https://www.gnu.org/licenses/gpl-3.0.html>.
+.PP
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+
