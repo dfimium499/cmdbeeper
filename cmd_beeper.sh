@@ -43,19 +43,9 @@ while getopts ":s:t:i:evqh" opt; do
             t_flag=true
 
             CMDBEEPER_TIMER=$OPTARG
-            if [[ ! $CMDBEEPER_TIMER =~ ^[0-9]+$ ]]; then
-                echo "${0}: timeout must be a positive integer"
-                exit 1
-            fi
             ;;
-        
         i) 
-            CMDBEEPER_INTERVAL=$OPTARG
-            if [[ ! $CMDBEEPER_INTERVAL =~ ^[0-9]+$ ]]; then
-                echo "${0}: interval must be a positive integer"
-                exit 1
-            fi
-            ;;
+            CMDBEEPER_INTERVAL=$OPTARG ;;
         e)
             if $t_flag; then
                 echo "${0}: -e and -t flags are incompatible"
@@ -106,9 +96,12 @@ if [[ ! -v CMDBEEPER_TUNE ]]; then
     CMDBEEPER_TUNE=/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga
 fi
 
-# Default interval
+# Default interval + check format
 if [[ ! -v CMDBEEPER_INTERVAL ]]; then
     CMDBEEPER_INTERVAL=0
+elif [[ -v CMDBEEPER_INTERVAL && ! $CMDBEEPER_INTERVAL =~ ^[0-9]+$ ]]; then
+    echo "${0}: interval must be a positive integer"
+    exit 1
 fi
 
 # Suppress or output text depending on whether silent mode is on
@@ -116,6 +109,12 @@ if [[ -v CMDBEEPER_QUIET ]]; then
     output_text=$'\n'
 else
     output_text=$'Press Enter to stop...\n'
+fi
+
+# Check timer format correctness
+if [[ -v CMDBEEPER_TIMER && ! $CMDBEEPER_TIMER =~ ^[0-9]+$ ]]; then
+    echo "${0}: timeout must be a positive integer"
+    exit 1
 fi
 
 # Exit gracefully on CTRL-C
