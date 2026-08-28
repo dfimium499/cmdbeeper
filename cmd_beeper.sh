@@ -6,12 +6,16 @@ loop_sound () {
     
     while true; do
         paplay "$1">/dev/null &
-        sub_pid=$!
-        wait $sub_pid
+        wait $!
+        ret=$?
+
+        if [ $ret -ne 0 ]; then
+            kill $$
+            exit $ret
+        fi
 
         sleep "$2" &
-        sub_pid=$!
-        wait $sub_pid
+        wait $!
     done
 }
 
