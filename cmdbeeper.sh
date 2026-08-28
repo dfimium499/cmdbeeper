@@ -20,7 +20,9 @@ VERSION=1.0.0
 
 # Child and child cleanup routines
 loop_sound () {
-    trap 'pkill -P $BASHPID 2>/dev/null; wait; exit 0' SIGTERM
+    local ret=0
+
+    trap 'pkill -P $BASHPID 2>/dev/null; wait; exit $ret' SIGTERM
     
     while true; do
         paplay "$1">/dev/null &
