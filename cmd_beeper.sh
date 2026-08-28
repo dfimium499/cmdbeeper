@@ -2,13 +2,16 @@
 sound=/usr/share/sounds/freedesktop/stereo/alarm-clock-elapsed.oga
 
 loop_sound () {
-    trap 'kill "$paplay_pid"2>/dev/null; wait; exit 0' SIGTERM
+    trap 'pkill -P $BASHPID 2>/dev/null; wait; exit 0' SIGTERM
     
     while true; do
         paplay "$1">/dev/null &
-        paplay_pid=$!
-        wait $paplay_pid
-        sleep "$2"
+        sub_pid=$!
+        wait $sub_pid
+
+        sleep "$2" &
+        sub_pid=$!
+        wait $sub_pid
     done
 }
 
