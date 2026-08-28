@@ -8,6 +8,7 @@ loop_sound () {
         paplay "$1">/dev/null &
         paplay_pid=$!
         wait $paplay_pid
+        sleep "$2"
     done
 }
 
@@ -18,14 +19,23 @@ cleanup () {
 }
 
 output_text=$'Press Enter to stop...\n'
+interval=0
 
-while getopts ":s:t:qh" opt; do
+while getopts ":s:t:i:qh" opt; do
     case $opt in
         s) sound=$OPTARG ;;
         t) 
             timer=$OPTARG
             if [[ ! $timer =~ ^[0-9]+$ ]]; then
                 echo "${0}: timeout must be a positive integer"
+                exit 1
+            fi
+            ;;
+        
+        i) 
+            interval=$OPTARG
+            if [[ ! $interval =~ ^[0-9]+$ ]]; then
+                echo "${0}: interval must be a positive integer"
                 exit 1
             fi
             ;;
@@ -52,7 +62,7 @@ fi
 
 trap 'cleanup' SIGINT SIGTERM
 
-loop_sound "$sound" &
+loop_sound "$sound" "$interval" &
 
 if [[ -v timer ]]; then
     read -r -s -t "$timer" -p "${output_text?}"
