@@ -1,4 +1,22 @@
 #!/bin/bash
+#
+# cmdbeeper — beep repeatedly until Enter is pressed or a timer elapses
+# Copyright (C) 2026  Diego Fernández
+#
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
+VERSION=1.0.0
 
 # Child and child cleanup routines
 loop_sound () {
@@ -21,9 +39,20 @@ loop_sound () {
 
 cleanup () {
     pkill -P $$ 2>/dev/null
-    wait
+    wait $loop_pid 2>/dev/null
     exit
 }
+
+# --version command
+if [[ "$1" == "--version" ]]; then
+    echo "cmdbeeper $VERSION"
+    echo "Copyright (C) 2026 Diego Fernández"
+    echo "License GPLv3+: GNU GPL version 3 or later <https://www.gnu.org/licenses/gpl-3.0.html>"
+    echo
+    echo "This is free software: you are free to change and redistribute it."
+    echo "There is NO WARRANTY, to the extent permitted by law."
+    exit 0
+fi
 
 # Argument parsing: env vars are overridden by explicit flag args
 v_flag=false
@@ -121,6 +150,7 @@ fi
 trap 'cleanup' SIGINT SIGTERM
 
 loop_sound "$CMDBEEPER_TUNE" "$CMDBEEPER_INTERVAL" &
+loop_pid=$!
 
 # No timer by default
 if [[ -v CMDBEEPER_TIMER ]]; then
