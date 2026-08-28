@@ -16,7 +16,9 @@ cleanup () {
     exit
 }
 
-while getopts ":s:t:h" opt; do
+output_text=$'Press Enter to stop...\n'
+
+while getopts ":s:t:qh" opt; do
     case $opt in
         s) sound=$OPTARG ;;
         t) 
@@ -26,6 +28,7 @@ while getopts ":s:t:h" opt; do
                 exit 1
             fi
             ;;
+        q) output_text=$'\n' ;;
         h)
             echo -e "usage: ${0} [-s sound_file] [-t timeout]\n\n See the man page for more information"
             exit 0
@@ -40,14 +43,20 @@ while getopts ":s:t:h" opt; do
     esac
 done
 
+shift $((OPTIND - 1))
+if [[ $# -gt 0 ]]; then
+    echo "${0}: unknown option $*" >&2
+    exit 1
+fi
+
 trap 'cleanup' SIGINT SIGTERM
 
 loop_sound "$sound" &
 
 if [[ -v timer ]]; then
-    read -r -s -p -t "${timer?}" $'Press Enter to stop...\n'
+    read -r -s -t "$timer" -p "${output_text?}"
 else
-    read -r -s -p $'Press Enter to stop...\n'
+    read -r -s -p "${output_text?}"
 fi
 cleanup
 
