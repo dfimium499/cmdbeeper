@@ -38,9 +38,23 @@ A `PulseAudio` or `PipeWire` audio server must be enabled. If `PipeWire` is the 
 The `libpulse` and `sound-theme-freedesktop` packages are also required to play audio from the terminal and to provide a default tune respectively.
 
 ## Installation
-**cmdbeeper** is a simple monolithic bash script, so appending `alias cmdbeeper bash /global/path/to/cmdbeeper` alias to your `bashrc` should be enough. 
-If you wish to install it globally instead, run `chmod +x cmdbeeper.sh` and install it into your global `/usr/bin` directory as `cmdbeeper`. 
-Since this method bypasses regular package management, an AUR package is coming soon to simplify the procedure and include the man page.
+
+### Arch Linux/Arch-related distros
+
+The **cmdbeeper** package is available through the [AUR](https://aur.archlinux.org). You can install it with an AUR helper such as [yay](https://github.com/Jguer/yay):
+
+```bash
+yay -S cmdbeeper
+```
+
+Once the installation is complete, you'll be able to run the `cmdbeeper` command and access the manual by running `man cmdbeeper`.
+
+### Manual installation
+
+**cmdbeeper** is a simple monolithic bash script, so appending `alias cmdbeeper="bash /global/path/to/cmdbeeper"` to your `bashrc` should be enough.
+
+If you wish to install it globally instead, run `chmod +x cmdbeeper.sh` and install it into your global `/usr/bin` directory as `cmdbeeper`, although this method 
+is not recommended. Try [the AUR package](#arch-linuxarch-related-distros) if you're running Arch Linux or an Arch-related distro.
 
 ## License
 
