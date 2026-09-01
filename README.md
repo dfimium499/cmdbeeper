@@ -4,7 +4,7 @@
 
 PulseAudio/PipeWire terminal beeper that notifies you when your commands are done running.
 
-**cmdbeeper** is a tiny bash script that plays an audio file on loop until Enter is pressed or SIGINT/SIGTERM is received. Chaining it with `;` after a shell command, 
+**cmdbeeper** is a tiny bash script that plays an audio file on loop until Enter is pressed or SIGINT/SIGTERM is received. Chaining it with `;` after a shell command 
 sets an alarm that will notify you when a long foreground process returns:
 
 ```bash
@@ -34,7 +34,7 @@ For more information on flag usage and environment variable configuration, see [
 
 ## Requirements
 
-A `PulseAudio` or `PipeWire` audio server must be enabled. If Pipewire is the target backend, make sure the `pipewire-pulse` compatibility layer is present. 
+A `PulseAudio` or `PipeWire` audio server must be enabled. If `PipeWire` is the target backend, make sure the `pipewire-pulse` compatibility layer is present. 
 The `libpulse` and `sound-theme-freedesktop` packages are also required to play audio from the terminal and to provide a default tune respectively.
 
 ## Installation
