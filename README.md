@@ -60,5 +60,5 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Author
-Diego Fernández - [dfimium499@proton.me](mailto:dfimium499@proton.me)
+Diego Fernández - [dfimium499+cmdbeeper@proton.me](mailto:dfimium499+cmdbeeper@proton.me)
 
