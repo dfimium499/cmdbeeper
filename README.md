@@ -53,7 +53,7 @@ Once the installation is complete, you'll be able to run the `cmdbeeper` command
 
 **cmdbeeper** is a simple monolithic bash script, so appending `alias cmdbeeper="bash /global/path/to/cmdbeeper"` to your `bashrc` should be enough.
 
-If you wish to install it globally instead, run `chmod +x cmdbeeper.sh` and install it into your global `/usr/bin` directory as `cmdbeeper`, although this method 
+If you wish to install it globally instead, install it into your global `/usr/bin` directory as `cmdbeeper` with 755 permissions, although this method 
 is not recommended. Try [the AUR package](#arch-linuxarch-related-distros) if you're running Arch Linux or an Arch-related distro.
 
 ## License
